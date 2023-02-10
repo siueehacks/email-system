@@ -1,5 +1,6 @@
 import smtplib
 import os
+import sys
 
 import pandas as pd
 from dotenv import load_dotenv
@@ -46,7 +47,11 @@ def send_email(to: str, name: str = 'Hacker'):
         )
 
 def main():
-    df = parse_csv("test.csv")
+    if len(sys.argv) != 2:
+        print("Usage: script.py <csv file>")
+        sys.exit(1)
+
+    df = parse_csv(sys.argv[1])
     for _, row in df.iterrows():
         send_email(row['Email'], row['First Name'])
 
