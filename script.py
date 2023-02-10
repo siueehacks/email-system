@@ -22,12 +22,13 @@ def parse_csv(filename: str):
     return df
 
 def generate_email_body(name: str):
+    discord_link = os.getenv("DISCORD_LINK")
     email = f"""
 Hello {name}!
 
 Thank you for registering for {{ehacks}} 2023. You're registration is confirmed. We are excited to have you join us for the event! We will be sending you more information about the event prior to the start date.
 
-Please join our discord to meet your fellow hackers and stay up to date: https://discord.gg/V9NaW4e5yv
+Please join our discord to meet your fellow hackers and stay up to date: {discord_link}
 
 Best Regards,
 eHacks Team
