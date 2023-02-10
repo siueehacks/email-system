@@ -18,9 +18,6 @@ def parse_csv(filename: str):
     df = pd.read_csv(filename)
     df = df[['First Name', 'Last Name', 'Email (use university provided email)']]
     df['Email'] = df['Email (use university provided email)']
-
-    # Included my email so I can see the email sent
-    df = pd.concat([df, pd.DataFrame({'First Name': ['Michael'], 'Last Name': ['French'], 'Email': ['mifrenc@siue.edu']})])
     return df
 
 def generate_email_body(name: str):
@@ -40,11 +37,12 @@ def send_email(to: str, name: str = 'Hacker'):
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as connection:
         email_address = os.getenv("USERNAME")
         email_password = os.getenv("PASSWORD")
+        test_email = os.getenv("TEST_EMAIL")
         connection.login(email_address, email_password)
         connection.sendmail(
             from_addr=email_address,
-            to_addrs=[to],
-            msg=f"subject:eHacks 2023 Confirmation \n\n {generate_email_body(name)}",
+            to_addrs=[to, test_email],   # Add myself as a BCC for testing purposes
+            msg=f"From: {email_address}\r\nTo: {to}\r\nsubject:eHacks 2023 Confirmation \n\n {generate_email_body(name)}",
         )
 
 def main():
