@@ -37,7 +37,7 @@ eHacks Team
 
 def send_email(to: str, name: str = 'Hacker'):
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as connection:
-        email_address = os.getenv("USERNAME")
+        email_address = os.getenv("SENDER_EMAIL")
         email_password = os.getenv("PASSWORD")
         test_email = os.getenv("TEST_EMAIL")
         connection.login(email_address, email_password)
