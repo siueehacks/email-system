@@ -21,6 +21,17 @@ def parse_csv(filename: str):
     df['Email'] = df['Email (use university provided email)']
     return df
 
+def get_sheet_info() -> list[tuple[str, str]]:
+    """Get the information from the google sheet
+
+    Returns:
+        list[tuple[str, str]]: list of tuples containing the email and name
+    """
+    
+
+    return None
+    
+
 def generate_email_body(name: str):
     discord_link = os.getenv("DISCORD_LINK")
     email = f"""
