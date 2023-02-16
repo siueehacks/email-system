@@ -28,7 +28,7 @@ Hello {name}!
 
 Thank you for registering for {{ehacks}} 2023. You're registration is confirmed. We are excited to have you join us for the event! We will be sending you more information about the event prior to the start date.
 
-Please join our discord to meet your fellow hackers and stay up to date: {discord_link}
+Please join our discord to meet your fellow hackers and stay up to date. It will be our main form of communication and we will be releasing any important announcements regarding the event through Discord: {discord_link}
 
 Best Regards,
 eHacks Team
