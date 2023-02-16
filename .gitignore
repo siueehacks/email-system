@@ -128,4 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Ignore VsCode Configs
 .vscode
+
+# Ignore GCP Credentials
+credentials.json
