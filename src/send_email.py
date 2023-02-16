@@ -4,6 +4,9 @@ import sys
 
 import pandas as pd
 from dotenv import load_dotenv
+from googleapiclient.discovery import build
+
+from utils import get_creds
 
 load_dotenv()
 
@@ -27,7 +30,17 @@ def get_sheet_info() -> list[tuple[str, str]]:
     Returns:
         list[tuple[str, str]]: list of tuples containing the email and name
     """
-    
+    creds = get_creds()
+    sheet_id = os.getenv("SHEET_ID")
+    service = build('sheets', 'v4', credentials=creds)
+    sheet = service.spreadsheets()
+    result = (
+            sheet.values()
+            .get(spreadsheetId="Form Responses 1", range=sheet_id)
+            .execute()
+    )
+    print(result)
+    values = result.get("values", [])
 
     return None
     
