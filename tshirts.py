@@ -12,7 +12,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from dotenv import load_dotenv
 
-from utils import get_creds
+from helpers.utils import get_creds
 
 load_dotenv()
 
