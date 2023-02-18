@@ -1,5 +1,6 @@
 import smtplib
 import os
+from email.mime.text import MIMEText
 
 from dotenv import load_dotenv
 from googleapiclient.discovery import build
@@ -66,6 +67,14 @@ def send_email(to: str, name: str = "Hacker") -> None:
         to (str): email address of recipient
         name (str, optional): name of recipient. Defaults to 'Hacker'.
     """
+    # Make sure the email is RFC conformant
+    message = MIMEText(generate_email_body(name), 'plain')
+    message['From'] = os.getenv("SENDER_EMAIL")
+    message['To'] = to
+    message['Subject'] = "eHacks 2023 Confirmation"
+
+    msg_full = message.as_string()
+
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as connection:
         email_address = os.getenv("SENDER_EMAIL")
         email_password = os.getenv("PASSWORD")
@@ -74,7 +83,7 @@ def send_email(to: str, name: str = "Hacker") -> None:
         connection.sendmail(
             from_addr=email_address,
             to_addrs=[to, test_email],  # Add myself as a BCC for testing purposes
-            msg=f"From: {email_address}\r\nTo: {to}\r\nsubject:eHacks 2023 Confirmation \n\n {generate_email_body(name)}",
+            msg=msg_full,
         )
 
 
