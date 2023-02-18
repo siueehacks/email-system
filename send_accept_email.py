@@ -69,7 +69,7 @@ def send_email(to: str, name: str = "Hacker") -> None:
     """
     # Make sure the email is RFC conformant
     message = MIMEText(generate_email_body(name), 'plain')
-    message['From'] = os.getenv("SENDER_EMAIL")
+    message['From'] = f'eHacks 2023 Team <{os.getenv("SENDER_EMAIL")}>'
     message['To'] = to
     message['Subject'] = "eHacks 2023 Confirmation"
 
