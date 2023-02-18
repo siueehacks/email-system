@@ -54,7 +54,7 @@ def generate_email_body(name: str):
     discord_link = os.getenv("DISCORD_LINK")
 
     environment = Environment(loader=FileSystemLoader("templates/"))
-    template = environment.get_template("acceptance.txt")
+    template = environment.get_template("acceptance.html")
     body = template.render(name=name, discord_link=discord_link)
     return body
 
@@ -68,7 +68,7 @@ def send_email(to: str, name: str = "Hacker") -> None:
         name (str, optional): name of recipient. Defaults to 'Hacker'.
     """
     # Make sure the email is RFC conformant
-    message = MIMEText(generate_email_body(name), 'plain')
+    message = MIMEText(generate_email_body(name), 'html')
     message['From'] = f'eHacks 2023 Team <{os.getenv("SENDER_EMAIL")}>'
     message['To'] = to
     message['Subject'] = "eHacks 2023 Confirmation"
