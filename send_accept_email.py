@@ -3,35 +3,23 @@ import os
 from email.mime.text import MIMEText
 
 from dotenv import load_dotenv
-from googleapiclient.discovery import build
 from jinja2 import Environment, FileSystemLoader
 
-from helpers.utils import get_creds
+from helpers.sheets import get_sheet_info
 
 load_dotenv()
 
 
-def get_sheet_info() -> list[tuple[str, str, dict]]:
+def retrieve_data() -> list[tuple[str, str, dict]]:
     """Get the information from the google sheet
 
     Returns:
         list[tuple[str, str]]: list of tuples containing the email and name
     """
-    creds = get_creds()
-    sheet_id = os.getenv("SHEET_ID")
-    service = build("sheets", "v4", credentials=creds)
-    sheet = service.spreadsheets()
+    values, grid_data = get_sheet_info("Form Responses 1", return_style=True)
 
-    # This call gets the data from the sheet
-    result = (
-        sheet.values().get(spreadsheetId=sheet_id, range="Form Responses 1").execute()
-    )
-    values = result.get("values")
-    values = values[1:]
-
-    # This gets the styling of all of the rows within the sheet
-    grid_data = sheet.get(spreadsheetId=sheet_id, includeGridData=True).execute()
-    grid_data = grid_data["sheets"][0]["data"][0]["rowData"][1:]
+    values = values[1:]  # Remove the header row
+    grid_data = grid_data[1:]  # Remove the header row
 
     if not values:
         print("No data found.")
