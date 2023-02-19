@@ -8,6 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from helpers.sheets import get_sheet_info, parse_for_data_and_style
 
+
 def generate_email_body():
     """Generate the body of the email using a Jinja template"""
     discord_link = os.getenv("DISCORD_LINK")
@@ -16,6 +17,7 @@ def generate_email_body():
     template = environment.get_template(sys.argv[1])
     body = template.render(discord_link=discord_link)
     return body
+
 
 def send_emails(to: List[str]) -> None:
     """
@@ -29,7 +31,7 @@ def send_emails(to: List[str]) -> None:
     message = MIMEText(generate_email_body(), "html")
     message["From"] = f'eHacks 2023 Team <{os.getenv("SENDER_EMAIL")}>'
     message["To"] = "eHacks 2023 Hackers"
-    message["Subject"] = "eHacks 2023 Update"
+    message["Subject"] = "eHacks 2023 Discord and Parking"
 
     msg_full = message.as_string()
 
@@ -44,6 +46,7 @@ def send_emails(to: List[str]) -> None:
             msg=msg_full,
         )
 
+
 def send_bulk_email():
     """Send the acceptance emails to all of the hackers"""
     sheet_info = get_sheet_info("Form Responses 1", return_style=True)
@@ -51,13 +54,16 @@ def send_bulk_email():
 
     emails = []
     for email, _, color in sheet_info:
-        if color['green'] == 0.76862746: # Value is hardcoded for now, but should improve this in the future
+        if (
+            color["green"] == 0.76862746
+        ):  # Value is hardcoded for now, but should improve this in the future
             emails.append(email)
     send_emails(emails)
 
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python send_bulk_email.py <template>")
+        print("Usage: python send_bulk_email.py <template file>")
         sys.exit(1)
 
     send_bulk_email()
