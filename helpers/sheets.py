@@ -10,6 +10,7 @@ load_dotenv()
 
 def get_sheet_info(range: str, return_style: bool = False) -> Any:
     """Get the information from the google sheet
+    NOTE: The header row is removed from the data
 
     Args:
         range (str): The range of the sheet to get data from
@@ -34,6 +35,31 @@ def get_sheet_info(range: str, return_style: bool = False) -> Any:
         grid_data = sheet.get(spreadsheetId=sheet_id, includeGridData=True).execute()
         grid_data = grid_data["sheets"][0]["data"][0]["rowData"]
 
-        return values, grid_data
+        return values[1:], grid_data[1:]
 
-    return values
+    return values[1:]
+
+def parse_for_data_and_style(values: list[list[str]], grid_data: list[dict]) -> list[tuple[str, str, dict]]:
+    """Parse the data and style from the sheet into a list of tuples
+
+    Args:
+        values (list[list[str]]): The data from the sheet
+        grid_data (list[dict]): The styling of the sheet
+
+    Returns:
+        list[tuple[str, str, dict]]: The parsed data
+    """
+    if not values:
+        print("No data found.")
+        return
+
+    # Parse the sheet data into a list of tuples
+    return_info = []
+    for i, row_data in enumerate(values):
+        row_style = grid_data[i]
+        color = row_style["values"][0]["effectiveFormat"]["backgroundColor"]
+        email = row_data[3]
+        name = row_data[1]
+        return_info.append((email, name, color))
+
+    return return_info

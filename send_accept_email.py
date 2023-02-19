@@ -5,36 +5,9 @@ from email.mime.text import MIMEText
 from dotenv import load_dotenv
 from jinja2 import Environment, FileSystemLoader
 
-from helpers.sheets import get_sheet_info
+from helpers.sheets import get_sheet_info, parse_for_data_and_style
 
 load_dotenv()
-
-
-def retrieve_data() -> list[tuple[str, str, dict]]:
-    """Get the information from the google sheet
-
-    Returns:
-        list[tuple[str, str]]: list of tuples containing the email and name
-    """
-    values, grid_data = get_sheet_info("Form Responses 1", return_style=True)
-
-    values = values[1:]  # Remove the header row
-    grid_data = grid_data[1:]  # Remove the header row
-
-    if not values:
-        print("No data found.")
-        return
-
-    # Parse the sheet data into a list of tuples
-    return_info = []
-    for i, row_data in enumerate(values):
-        row_style = grid_data[i]
-        color = row_style["values"][0]["effectiveFormat"]["backgroundColor"]
-        email = row_data[3]
-        name = row_data[1]
-        return_info.append((email, name, color))
-
-    return return_info
 
 
 def generate_email_body(name: str):
@@ -56,10 +29,10 @@ def send_email(to: str, name: str = "Hacker") -> None:
         name (str, optional): name of recipient. Defaults to 'Hacker'.
     """
     # Make sure the email is RFC conformant
-    message = MIMEText(generate_email_body(name), 'html')
-    message['From'] = f'eHacks 2023 Team <{os.getenv("SENDER_EMAIL")}>'
-    message['To'] = to
-    message['Subject'] = "eHacks 2023 Confirmation"
+    message = MIMEText(generate_email_body(name), "html")
+    message["From"] = f'eHacks 2023 Team <{os.getenv("SENDER_EMAIL")}>'
+    message["To"] = to
+    message["Subject"] = "eHacks 2023 Confirmation"
 
     msg_full = message.as_string()
 
@@ -77,7 +50,8 @@ def send_email(to: str, name: str = "Hacker") -> None:
 
 def send_acceptance_emails() -> None:
     """Send the acceptance emails to all of the hackers"""
-    sheet_info = get_sheet_info()
+    sheet_info = get_sheet_info("Form Responses 1", return_style=True)
+    sheet_info = parse_for_data_and_style(sheet_info[0], sheet_info[1])
     for email, name, color in sheet_info:
         # If the color is white, send an email to the person
         if color["red"] == 1 and color["green"] == 1 and color["blue"] == 1:
