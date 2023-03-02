@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List, Tuple
 import os
 
 from googleapiclient.discovery import build
@@ -39,7 +39,7 @@ def get_sheet_info(range: str, return_style: bool = False) -> Any:
 
     return values[1:]
 
-def parse_for_data_and_style(values: list[list[str]], grid_data: list[dict]) -> list[tuple[str, str, dict]]:
+def parse_for_data_and_style(values: List[List[str]], grid_data: List[dict]) -> List[Tuple[str, str, dict]]:
     """Parse the data and style from the sheet into a list of tuples
 
     Args:
