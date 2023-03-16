@@ -28,3 +28,5 @@ def get_creds() -> Credentials:
 
     return creds
     
+if __name__ == "__main__":
+    get_creds()

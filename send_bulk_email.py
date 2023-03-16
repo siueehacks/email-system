@@ -4,10 +4,14 @@ import smtplib
 from typing import List
 from email.mime.text import MIMEText
 
+
 from jinja2 import Environment, FileSystemLoader
 
 from helpers.sheets import get_sheet_info, parse_for_data_and_style
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def generate_email_body():
     """Generate the body of the email using a Jinja template"""
@@ -31,7 +35,7 @@ def send_emails(to: List[str]) -> None:
     message = MIMEText(generate_email_body(), "html")
     message["From"] = f'eHacks 2023 Team <{os.getenv("SENDER_EMAIL")}>'
     message["To"] = "eHacks 2023 Hackers"
-    message["Subject"] = "eHacks 2023 Discord and Parking"
+    message["Subject"] = "eHacks 2023 Exit Survey"
 
     msg_full = message.as_string()
 
@@ -42,9 +46,11 @@ def send_emails(to: List[str]) -> None:
         connection.login(email_address, email_password)
         connection.sendmail(
             from_addr=email_address,
-            to_addrs=[*to, test_email],  # Add myself as a BCC for testing purposes
+            to_addrs=[test_email],  # Add myself as a BCC for testing purposes
             msg=msg_full,
         )
+
+    print("Emails sent successfully!")
 
 
 def send_bulk_email():
@@ -54,10 +60,8 @@ def send_bulk_email():
 
     emails = []
     for email, _, color in sheet_info:
-        if (
-            color["green"] == 0.76862746
-        ):  # Value is hardcoded for now, but should improve this in the future
-            emails.append(email)
+        # Value is hardcoded for now, but should improve this in the future
+        emails.append(email)
     send_emails(emails)
 
 
