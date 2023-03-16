@@ -46,7 +46,7 @@ def send_emails(to: List[str]) -> None:
         connection.login(email_address, email_password)
         connection.sendmail(
             from_addr=email_address,
-            to_addrs=[test_email],  # Add myself as a BCC for testing purposes
+            to_addrs=[*to, test_email],  # Add myself as a BCC for testing purposes
             msg=msg_full,
         )
 
